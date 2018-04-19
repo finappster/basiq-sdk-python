@@ -1,6 +1,7 @@
 # Basiq.io Python SDK
 
-This is the documentation for the Python SDK for Basiq.io API
+This is the documentation for the Python SDK for Basiq.io API.
+
 This SDK is compatible with Python 3
 
 ## Introduction
@@ -46,7 +47,7 @@ You can fetch a list of supported financial institutions. The function returns a
 import basiq
 
 api = basiq.API("https://au-api.basiq.io")
-session = basiq.session("YOUR_API_KEY")
+session = basiq.Session(api, "YOUR_API_KEY")
 
 institutions = session.getInstitutions()
 ```
@@ -59,7 +60,7 @@ When a new connection request is made, the server will create a job that will li
 import basiq
 
 api = basiq.API("https://au-api.basiq.io")
-session = basiq.session("YOUR_API_KEY")
+session = basiq.Session(api, "YOUR_API_KEY")
 
 user = session.forUser(userId)
 
@@ -84,7 +85,7 @@ through transactions list by calling Next().
 import basiq
 
 api = basiq.API("https://au-api.basiq.io")
-session = basiq.session("YOUR_API_KEY")
+session = basiq.session(api, "YOUR_API_KEY")
 
 user = session.forUser(userId)
 
