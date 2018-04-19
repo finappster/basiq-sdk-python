@@ -1,3 +1,21 @@
+from ..utils import FilterBuilder
+
+class TransactionList:
+    def __init__(self, service, data):
+        self.data = data
+        self.service = service
+
+    def next(self): 
+        if "links" in self.data and "next" in self.data["links"]:
+            next_link = self.data["links"]["next"]
+            print("Next:", next_link)
+            next_path = next_link[next_link.rfind(".io/")+4:]
+            nt = self.service.session.api.get(next_path)
+            self.data = nt
+            return self
+
+        return None
+
 class User:
     def __init__(self, service):
         self.service = service
@@ -21,14 +39,14 @@ class User:
     def getTransaction(self, id):
         return self.service.getTransaction(self.id, id)
 
-    def getTransactions(self):
-        return self.service.getTransactions(self.id)
+    def getTransactions(self, filter = None):
+        return self.service.getTransactions(self.id, filter)
 
     def getAccount(self, id):
         return self.service.getAccount(self.id, id)
 
-    def getAccounts(self):
-        return self.service.getAccounts(self.id)
+    def getAccounts(self, filter = None):
+        return self.service.getAccounts(self.id, filter)
 
 
 class UserService:
@@ -97,11 +115,25 @@ class UserService:
     def getTransaction(self, user_id, id):
         return self.session.api.get("users/" + user_id + "/transactions/" + id)
 
-    def getTransactions(self, user_id):
-        return self.session.api.get("users/" + user_id + "/transactions")
+    def getTransactions(self, user_id, filter = None):
+        url = "users/" + user_id + "/transactions"
+        if filter != None:
+            if type(filter).__name__ != "FilterBuilder":
+                raise Exception("Provided filter must be an instance of FilterBuilder class")
+            url = url + "?" + filter.getFilter()
+
+        t = self.session.api.get(url)
+
+        return TransactionList(self, t)
         
     def getAccount(self, user_id, id):
         return self.session.api.get("users/" + user_id + "/accounts/" + id)
 
-    def getAccounts(self, user_id):
-        return self.session.api.get("users/" + user_id + "/accounts")
+    def getAccounts(self, user_id, filter = None):
+        url = "users/" + user_id + "/accounts"
+        if filter != None:
+            if type(filter).__name__ != "FilterBuilder":
+                raise Exception("Provided filter must be an instance of FilterBuilder class")
+            url = url + "?" + filter.getFilter()
+
+        return self.session.api.get(url)
