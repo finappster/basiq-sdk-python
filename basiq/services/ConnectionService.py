@@ -1,3 +1,5 @@
+import time
+
 class Connection:
     def __init__(self, service):
         self.service = service
@@ -16,6 +18,48 @@ class Job:
     def forJob(self, id):
         self.id = id
         return self
+
+    def getConnectionId(self):
+        if hasattr(self, "links") and "source" not in self.links:
+            return ""
+        
+        return self.links["source"][self.links["source"].rfind("/")+1:]
+
+    def waitForCredentials(self, interval, timeout, i = 0):
+        j = self.service.getJob(self.id)
+
+        time.sleep(interval / 1000)
+
+        if i * (interval / 1000) > timeout:
+            return False
+
+        i += 1
+
+        step = j.steps[0]
+        if step["status"] == "success":
+            return self.service.get(j.getConnectionId())
+        if step["status"] == "failure":
+            return False
+            
+        return self.waitForCredentials(interval, timeout, i)
+
+    def waitForTransactions(self, interval, timeout, i = 0):
+        j = self.service.getJob(self.id)
+
+        time.sleep(interval / 1000)
+
+        if i * (interval / 1000) > timeout:
+            return False
+
+        i += 1
+
+        step = j.steps[2]
+        if step["status"] == "success":
+            return self.service.get(j.getConnectionId())
+        if step["status"] == "failure":
+            return False
+            
+        return self.waitForTransactions(interval, timeout, i)
 
 class ConnectionService:
     def __init__(self, session, user):
@@ -45,6 +89,7 @@ class ConnectionService:
         j.id = r["id"]
         j.created = r["created"]
         j.updated = r["updated"]
+        j.links = r["links"]
         if "steps" in r:
             j.steps = r["steps"]
 

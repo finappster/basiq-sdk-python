@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
-  name = "basiq-sdk-python",
-  packages = ["basiq-sdk-python"], # this must be the same as the name above
+  name = "basiq",
+  packages = ["basiq"], # this must be the same as the name above
   version = "0.9",
   description = "SDK Package for Basiq's HTTP API",
   author = "Nenad Lukic",
