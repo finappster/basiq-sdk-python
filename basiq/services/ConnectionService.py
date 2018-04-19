@@ -11,6 +11,12 @@ class Connection:
     def refresh(self):
         return self.service.refresh(self.id)
 
+    def update(self, password):
+        return self.service.update(self.id, password)
+
+    def delete(self):
+        return self.service.delete(self.id)
+
 class Job:
     def __init__(self, service):
         self.service = service
@@ -23,7 +29,18 @@ class Job:
         if hasattr(self, "links") and "source" not in self.links:
             return ""
         
+        if hasattr(self, "links") == False:
+            return ""
+
         return self.links["source"][self.links["source"].rfind("/")+1:]
+
+    def getConnection(self):
+        if self.getConnectionId() == "":
+            j = self.service.getJob(self.id)
+        else:
+            j = self
+
+        return self.service.get(j.getConnectionId())
 
     def waitForCredentials(self, interval, timeout, i = 0):
         j = self.service.getJob(self.id)

@@ -1,4 +1,5 @@
 from ..utils import FilterBuilder
+from .ConnectionService import ConnectionService
 
 class TransactionList:
     def __init__(self, service, data):
@@ -29,6 +30,15 @@ class User:
         self.email = r["email"]
         self.mobile = r["mobile"]
         return self
+
+    def update(self, email = None, mobile = None):
+        return self.service.update(self.id, email=email, mobile=mobile)
+
+    def delete(self):
+        return self.service.delete(self.id)
+
+    def createConnection(self, data):
+        return ConnectionService(self.service.session, self).create(data)
 
     def refreshAllConnections(self):
         return self.service.refreshAllConnections(self.id)
