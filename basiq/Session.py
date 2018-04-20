@@ -12,9 +12,9 @@ class Session:
         self.headers = None
         self.api = api
 
-        self.get_token()
+        self.getToken()
 
-    def get_token(self):
+    def getToken(self):
         if self.validity != None and time.gmtime() - self.refreshed < self.validity:
             return self.__token
 
@@ -33,15 +33,15 @@ class Session:
         else:
             print("No access token:", r)
 
-    def get_institutions(self):
+    def getInstitutions(self):
         return self.api.get("institutions")
 
-    def get_institution(self, id):
+    def getInstitution(self, id):
         return self.api.get("institutions/" + id)
 
-    def get_user(self, id):
+    def getUser(self, id):
         return UserService(self).get(id)
 
-    def for_user(self, id):
+    def forUser(self, id):
         return UserService(self).forUser(id)
 
