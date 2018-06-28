@@ -52,6 +52,17 @@ session = basiq.Session(api, "YOUR_API_KEY")
 institutions = session.getInstitutions()
 ```
 
+You can specify the version of API when instantiating Session object. When the version is not specified, default version is 1.0.
+
+```python
+import basiq
+
+api = basiq.API("https://au-api.basiq.io")
+session = basiq.Session(api, "YOUR_API_KEY", "2.0")
+
+institutions = session.getInstitutions()
+```
+
 ### Creating a new connection
 
 When a new connection request is made, the server will create a job that will link user's financial institution with your app.
