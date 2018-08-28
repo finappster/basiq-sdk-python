@@ -87,6 +87,7 @@ class UserService:
         r = self.session.api.post("users/", json=json)
 
         u = User(self)
+        u.id = r["id"]
         u.email = r["email"]
         u.mobile = r["mobile"]
 
@@ -104,6 +105,7 @@ class UserService:
         r = self.session.api.post("users/" + id, json=json)
 
         u = User(self)
+        u.id = r["id"]
         u.email = r["email"]
         u.mobile = r["mobile"]
 
