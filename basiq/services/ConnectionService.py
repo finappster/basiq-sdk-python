@@ -55,7 +55,7 @@ class Job:
         step = j.steps[0]
         if step["status"] == "success":
             return self.service.get(j.getConnectionId())
-        if step["status"] == "failure":
+        if step["status"] == "failed":
             return False
             
         return self.waitForCredentials(interval, timeout, i)
@@ -73,7 +73,7 @@ class Job:
         step = j.steps[2]
         if step["status"] == "success":
             return self.service.get(j.getConnectionId())
-        if step["status"] == "failure":
+        if step["status"] == "failed":
             return False
             
         return self.waitForTransactions(interval, timeout, i)
