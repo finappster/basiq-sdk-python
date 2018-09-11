@@ -43,8 +43,8 @@ class User:
     def refreshAllConnections(self):
         return self.service.refreshAllConnections(self.id)
 
-    def listAllConnections(self):
-        return self.service.listAllConnections(self.id)
+    def listAllConnections(self, filter=None):
+        return self.service.listAllConnections(self.id, filter)
 
     def getTransaction(self, id):
         return self.service.getTransaction(self.id, id)
@@ -122,9 +122,14 @@ class UserService:
 
         return r
 
-    def listAllConnections(self, id):
-        return self.session.api.get("users/" + id + "/connections")
-        
+    def listAllConnections(self, id, filter=None):
+        url = "users/" + id + "/connections"
+        if filter != None:
+            if type(filter).__name__ != "FilterBuilder":
+                raise Exception("Provided filter must be an instance of FilterBuilder class")
+            url = url + "?" + filter.getFilter()
+        return self.session.api.get(url)
+
     def getTransaction(self, user_id, id):
         return self.session.api.get("users/" + user_id + "/transactions/" + id)
 
