@@ -129,8 +129,13 @@ class ConnectionService:
 
         return j
 
-    def update(self, id, password):
-        r = self.session.api.post("users/" + self.user.id + "/connections/" + id, json={password: password})
+    def update(self, id, password, security_code=None, secondary_login_id=None):
+        data = {'password': password}
+        if security_code is not None:
+            data['securityCode'] = security_code
+        if secondary_login_id is not None:
+            data['secondaryLoginId'] = secondary_login_id
+        r = self.session.api.post("users/" + self.user.id + "/connections/" + id, json=data)
 
         j = Job(self)
         j.id = r["id"]
