@@ -60,6 +60,24 @@ class Job:
             
         return self.waitForCredentials(interval, timeout, i)
 
+    def waitForAccounts(self, interval, timeout, i = 0):
+        j = self.service.getJob(self.id)
+
+        time.sleep(interval / 1000)
+
+        if i * (interval / 1000) > timeout:
+            return False
+
+        i += 1
+
+        step = j.steps[1]
+        if step["status"] == "success":
+            return self.service.get(j.getConnectionId())
+        if step["status"] == "failed":
+            return False
+
+        return self.waitForAccounts(interval, timeout, i)
+
     def waitForTransactions(self, interval, timeout, i = 0):
         j = self.service.getJob(self.id)
 
